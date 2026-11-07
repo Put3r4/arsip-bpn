@@ -13,6 +13,8 @@ use App\Models\ArchiveDocument;
 use App\Models\District;
 use App\Models\DocumentType;
 use App\Models\LandRightType;
+use App\Models\Section;
+use App\Models\ServiceActivity;
 use App\Models\StorageRack;
 use DomainException;
 use Illuminate\Http\JsonResponse;
@@ -33,8 +35,17 @@ class ArchiveDocumentController extends Controller
         $documentTypes = DocumentType::orderBy('name')->get(['id', 'name']);
         $landRightTypes = LandRightType::orderBy('name')->get(['id', 'name']);
         $storageRacks = StorageRack::orderBy('name')->get(['id', 'name']);
+        $sections = Section::orderBy('name')->get(['id', 'name']);
+        $serviceActivities = ServiceActivity::orderBy('name')->get(['id', 'name']);
 
-        return view('documents.index', compact('districts', 'documentTypes', 'landRightTypes', 'storageRacks'));
+        return view('documents.index', compact(
+            'districts',
+            'documentTypes',
+            'landRightTypes',
+            'storageRacks',
+            'sections',
+            'serviceActivities'
+        ));
     }
 
     /**
@@ -148,6 +159,8 @@ class ArchiveDocumentController extends Controller
                         'edit' => $canManage,
                         'update_status' => $canManage && ! $hasActiveLoan,
                         'delete' => $canManage && ! $hasActiveLoan,
+                        'book' => $doc->status === \App\Enums\DocumentStatus::AVAILABLE,
+                        'view_history' => $canManage,
                     ],
                 ];
             }),

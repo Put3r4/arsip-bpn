@@ -14,6 +14,7 @@ use App\Models\StorageRack;
 use App\Models\User;
 use App\Models\Village;
 use App\Policies\ArchiveDocumentPolicy;
+use App\Policies\DocumentLoanPolicy;
 use App\Policies\DocumentTypePolicy;
 use App\Policies\LandRightTypePolicy;
 use App\Policies\SectionPolicy;
@@ -73,6 +74,17 @@ class AccessMatrixTest extends TestCase
             'mime_type' => 'application/pdf',
         ]);
 
+        $loan = DocumentLoan::factory()->pending()->create([
+            'archive_document_id' => $document->id,
+            'borrower_id' => $targetUser->id,
+            'service_activity_id' => $serviceActivity->id,
+        ]);
+
+        if ($routeTemplate === '/loans/{loan}/return') {
+            $loan->update(['status' => \App\Enums\LoanStatus::BORROWED]);
+            $document->update(['status' => \App\Enums\DocumentStatus::BORROWED]);
+        }
+
         $uri = str_replace(
             [
                 '{section}',
@@ -83,6 +95,7 @@ class AccessMatrixTest extends TestCase
                 '{document_type}',
                 '{land_right_type}',
                 '{service_activity}',
+                '{loan}',
             ],
             [
                 $section->id,
@@ -93,6 +106,7 @@ class AccessMatrixTest extends TestCase
                 $documentType->id,
                 $landRightType->id,
                 $serviceActivity->id,
+                $loan->id,
             ],
             $routeTemplate
         );
@@ -163,6 +177,12 @@ class AccessMatrixTest extends TestCase
                 $payload = ['name' => 'RightType Matrix ' . uniqid()];
             } elseif ($routeTemplate === '/master/service-activities' || $routeTemplate === '/master/service-activities/{service_activity}') {
                 $payload = ['name' => 'Activity Matrix ' . uniqid()];
+            } elseif ($routeTemplate === '/loans') {
+                $payload = [
+                    'archive_document_id' => $document->id,
+                    'service_activity_id' => $serviceActivity->id,
+                    'notes' => 'Matrix Booking',
+                ];
             }
         }
 
@@ -279,6 +299,76 @@ class AccessMatrixTest extends TestCase
             ['GET', '/api/sections/{section}/users', [
                 'guest' => 302,
                 'employee' => 200,
+                'archivist' => 200,
+                'super_admin' => 200,
+            ], false],
+
+            // Peminjaman Berkas (Semua Peran Terotentikasi)
+            ['GET', '/loans', [
+                'guest' => 302,
+                'employee' => 200,
+                'archivist' => 200,
+                'super_admin' => 200,
+            ], false],
+            ['GET', '/loans/data', [
+                'guest' => 302,
+                'employee' => 200,
+                'archivist' => 200,
+                'super_admin' => 200,
+            ], false],
+            ['POST', '/loans', [
+                'guest' => 302,
+                'employee' => 302,
+                'archivist' => 302,
+                'super_admin' => 302,
+            ], false],
+            ['POST', '/loans/{loan}/cancel', [
+                'guest' => 302,
+                'employee' => 403,
+                'archivist' => 302,
+                'super_admin' => 302,
+            ], false],
+            ['DELETE', '/loans/{loan}', [
+                'guest' => 302,
+                'employee' => 403,
+                'archivist' => 302,
+                'super_admin' => 302,
+            ], false],
+            ['GET', '/loans/returned', [
+                'guest' => 302,
+                'employee' => 200,
+                'archivist' => 200,
+                'super_admin' => 200,
+            ], false],
+            ['GET', '/my-loans', [
+                'guest' => 302,
+                'employee' => 200,
+                'archivist' => 200,
+                'super_admin' => 200,
+            ], false],
+
+            // Peminjaman Khusus Staf Arsip
+            ['POST', '/loans/{loan}/approve', [
+                'guest' => 302,
+                'employee' => 403,
+                'archivist' => 302,
+                'super_admin' => 302,
+            ], false],
+            ['POST', '/loans/{loan}/return', [
+                'guest' => 302,
+                'employee' => 403,
+                'archivist' => 302,
+                'super_admin' => 302,
+            ], false],
+            ['GET', '/documents/{document}/history', [
+                'guest' => 302,
+                'employee' => 403,
+                'archivist' => 200,
+                'super_admin' => 200,
+            ], false],
+            ['GET', '/audit', [
+                'guest' => 302,
+                'employee' => 403,
                 'archivist' => 200,
                 'super_admin' => 200,
             ], false],
@@ -667,6 +757,69 @@ class AccessMatrixTest extends TestCase
         }
 
         foreach ($writeMethods as $method) {
+            $matrix["employee - {$method}"] = ['employee', $method, false];
+            $matrix["archivist - {$method}"] = ['archivist', $method, true];
+            $matrix["super_admin - {$method}"] = ['super_admin', $method, true];
+        }
+
+        return $matrix;
+    }
+
+    /**
+     * Uji matriks setiap method DocumentLoanPolicy pada ketiga role.
+     */
+    #[DataProvider('documentLoanPolicyMethodsProvider')]
+    public function test_document_loan_policy_methods(string $role, string $method, bool $expectedResult): void
+    {
+        $policy = new DocumentLoanPolicy();
+        $section = Section::factory()->create();
+
+        $actor = User::factory()->create([
+            'role' => UserRole::from($role),
+            'section_id' => $section->id,
+            'is_active' => true,
+        ]);
+
+        $otherUser = User::factory()->employee()->create([
+            'section_id' => $section->id,
+            'is_active' => true,
+        ]);
+
+        $loan = DocumentLoan::factory()->pending()->create([
+            'borrower_id' => $otherUser->id,
+        ]);
+
+        $result = match ($method) {
+            'viewAny' => $policy->viewAny($actor),
+            'view' => $policy->view($actor, $loan),
+            'create' => $policy->create($actor),
+            'bookForOther' => $policy->bookForOther($actor),
+            'approve' => $policy->approve($actor, $loan),
+            'return' => $policy->return($actor, $loan),
+            'cancel' => $policy->cancel($actor, $loan),
+            'viewDocumentHistory' => $policy->viewDocumentHistory($actor),
+        };
+
+        $this->assertSame(
+            $expectedResult,
+            $result,
+            "DocumentLoanPolicy::{$method} untuk role {$role} menghasilkan nilai yang berbeda dari ekspektasi."
+        );
+    }
+
+    public static function documentLoanPolicyMethodsProvider(): array
+    {
+        $allRolesMethods = ['viewAny', 'create'];
+        $staffOnlyMethods = ['bookForOther', 'approve', 'return', 'viewDocumentHistory', 'view', 'cancel'];
+        $matrix = [];
+
+        foreach ($allRolesMethods as $method) {
+            $matrix["employee - {$method}"] = ['employee', $method, true];
+            $matrix["archivist - {$method}"] = ['archivist', $method, true];
+            $matrix["super_admin - {$method}"] = ['super_admin', $method, true];
+        }
+
+        foreach ($staffOnlyMethods as $method) {
             $matrix["employee - {$method}"] = ['employee', $method, false];
             $matrix["archivist - {$method}"] = ['archivist', $method, true];
             $matrix["super_admin - {$method}"] = ['super_admin', $method, true];

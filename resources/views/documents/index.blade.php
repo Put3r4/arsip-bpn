@@ -45,8 +45,26 @@
             statusModalOpen: false,
             deleteModalOpen: false,
             previewModalOpen: false,
+            bookingModalOpen: false,
+            historyModalOpen: false,
+            historyLoading: false,
+            historyList: [],
+            historyDoc: null,
 
             // Form data states
+            bookingForm: {
+                document_id: null,
+                document_number: '',
+                document_type_name: '',
+                land_right_type_name: '',
+                rack_name: '',
+                section_id: '',
+                borrower_id: '{{ auth()->id() }}',
+                service_activity_id: '',
+                notes: '',
+                usersList: [],
+                usersLoading: false
+            },
             createForm: {
                 district_id: '',
                 village_id: '',
@@ -191,6 +209,70 @@
                     url: `/documents/${item.id}/file`
                 };
                 this.previewModalOpen = true;
+            },
+
+            openBooking(item) {
+                this.bookingForm = {
+                    document_id: item.id,
+                    document_number: item.document_number,
+                    document_type_name: item.document_type ? item.document_type.name : '-',
+                    land_right_type_name: item.land_right_type ? item.land_right_type.name : '-',
+                    rack_name: item.storage_rack ? item.storage_rack.name : '-',
+                    section_id: '',
+                    borrower_id: '{{ auth()->id() }}',
+                    service_activity_id: '',
+                    notes: '',
+                    usersList: [],
+                    usersLoading: false
+                };
+                this.bookingModalOpen = true;
+            },
+
+            onBookingSectionChange() {
+                this.bookingForm.borrower_id = '';
+                this.bookingForm.usersList = [];
+                if (!this.bookingForm.section_id) return;
+
+                this.bookingForm.usersLoading = true;
+                fetch(`/api/sections/${this.bookingForm.section_id}/users`, {
+                    headers: { 'Accept': 'application/json' }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    this.bookingForm.usersList = data;
+                    if (data.length > 0) {
+                        this.bookingForm.borrower_id = data[0].id;
+                    }
+                })
+                .catch(e => console.error(e))
+                .finally(() => {
+                    this.bookingForm.usersLoading = false;
+                });
+            },
+
+            openHistory(item) {
+                this.historyDoc = item;
+                this.historyList = [];
+                this.historyLoading = true;
+                this.historyModalOpen = true;
+
+                fetch(`/documents/${item.id}/history`, {
+                    headers: { 'Accept': 'application/json' }
+                })
+                .then(r => {
+                    if (!r.ok) throw new Error('Gagal memuat riwayat.');
+                    return r.json();
+                })
+                .then(data => {
+                    this.historyList = data.history || [];
+                })
+                .catch(e => {
+                    console.error(e);
+                    this.historyList = [];
+                })
+                .finally(() => {
+                    this.historyLoading = false;
+                });
             },
 
             applyFilters(tableComponent) {
@@ -466,6 +548,34 @@
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                </button>
+                            </template>
+
+                            <!-- Booking Berkas (Semua Peran, saat dokumen available) -->
+                            <template x-if="item.can.book">
+                                <button 
+                                    type="button" 
+                                    @click="openBooking(item)"
+                                    class="p-1 rounded text-emerald-600 hover:bg-emerald-50 transition"
+                                    title="Ajukan Booking Peminjaman"
+                                >
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
+                                </button>
+                            </template>
+
+                            <!-- Riwayat Jejak Audit Peminjaman (Staf Arsip) -->
+                            <template x-if="item.can.view_history">
+                                <button 
+                                    type="button" 
+                                    @click="openHistory(item)"
+                                    class="p-1 rounded text-indigo-600 hover:bg-indigo-50 transition"
+                                    title="Lihat Riwayat Jejak Audit"
+                                >
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
                                 </button>
                             </template>
@@ -1024,6 +1134,250 @@
                         Ya, Hapus Dokumen
                     </x-button>
                 </form>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- MODAL BOOKING PEMINJAMAN BERKAS -->
+        <!-- ========================================== -->
+        <div 
+            x-show="bookingModalOpen" 
+            x-transition 
+            class="fixed inset-0 z-50 overflow-y-auto bg-black/50 flex items-center justify-center p-4"
+            style="display: none;"
+        >
+            <div 
+                @click.outside="bookingModalOpen = false"
+                class="w-full max-w-xl bg-[var(--color-surface-card)] rounded-2xl border border-[var(--color-surface-border)] shadow-xl p-6 space-y-4"
+            >
+                <div class="flex items-center justify-between pb-3 border-b border-[var(--color-surface-border)]">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-[var(--color-primary)]">Pengajuan Booking Peminjaman</h3>
+                            <p class="text-[11px] text-[var(--color-text-muted)]">Permohonan peminjaman berkas fisik warkah pertanahan</p>
+                        </div>
+                    </div>
+                    <button type="button" @click="bookingModalOpen = false" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+                </div>
+
+                <!-- Info Berkas Yang Dipinjam -->
+                <div class="p-3 rounded-xl bg-[var(--color-surface)] border border-[var(--color-surface-border)] flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <div>
+                        <span class="text-[11px] text-[var(--color-text-muted)] block">Nomor Berkas:</span>
+                        <strong class="text-[var(--color-primary)] font-bold text-sm" x-text="bookingForm.document_number"></strong>
+                    </div>
+                    <div>
+                        <span class="text-[11px] text-[var(--color-text-muted)] block">Jenis / Hak:</span>
+                        <span class="font-medium text-[var(--color-text-main)]" x-text="bookingForm.document_type_name + ' / ' + bookingForm.land_right_type_name"></span>
+                    </div>
+                    <div>
+                        <span class="text-[11px] text-[var(--color-text-muted)] block">Lokasi Rak:</span>
+                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-semibold bg-slate-200 text-slate-800" x-text="bookingForm.rack_name"></span>
+                    </div>
+                </div>
+
+                <form method="POST" action="/loans" class="space-y-4">
+                    @csrf
+                    <input type="hidden" name="archive_document_id" :value="bookingForm.document_id">
+
+                    @if(auth()->user()->canManageArchives())
+                        <!-- Staf Arsip: Pilih Seksi lalu Pegawai Peminjam (A4 & A5 butir 12) -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-xl border border-dashed border-[var(--color-surface-border)] bg-[var(--color-surface)]/30">
+                            <div>
+                                <label class="block text-xs font-semibold text-[var(--color-text-main)] mb-1">
+                                    Pilih Seksi Pegawai <span class="text-rose-500">*</span>
+                                </label>
+                                <select 
+                                    x-model="bookingForm.section_id"
+                                    @change="onBookingSectionChange()"
+                                    class="w-full px-3 py-2 text-xs rounded-lg border border-[var(--color-surface-border)] bg-[var(--color-surface-card)] text-[var(--color-text-main)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                                >
+                                    <option value="">-- Pilih Seksi Peminjam --</option>
+                                    @foreach($sections as $sec)
+                                        <option value="{{ $sec->id }}">{{ $sec->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-[var(--color-text-main)] mb-1">
+                                    Pegawai Peminjam <span class="text-rose-500">*</span>
+                                    <span x-show="bookingForm.usersLoading" class="text-[10px] text-sky-600 font-normal">(Memuat...)</span>
+                                </label>
+                                <select 
+                                    name="borrower_id"
+                                    x-model="bookingForm.borrower_id"
+                                    required
+                                    class="w-full px-3 py-2 text-xs rounded-lg border border-[var(--color-surface-border)] bg-[var(--color-surface-card)] text-[var(--color-text-main)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                                >
+                                    <option value="{{ auth()->id() }}">Booking untuk Diri Sendiri ({{ auth()->user()->name }})</option>
+                                    <template x-for="u in bookingForm.usersList" :key="u.id">
+                                        <option :value="u.id" x-text="u.name + (u.nip ? ' (' + u.nip + ')' : '')"></option>
+                                    </template>
+                                </select>
+                            </div>
+                        </div>
+                    @else
+                        <!-- Pegawai Biasa: Terkunci otomatis ke diri sendiri -->
+                        <div class="p-3 rounded-xl border border-[var(--color-surface-border)] bg-[var(--color-surface)]/50 flex items-center justify-between">
+                            <div>
+                                <span class="text-[11px] text-[var(--color-text-muted)] block">Pegawai Peminjam:</span>
+                                <span class="font-bold text-xs text-[var(--color-text-main)]">{{ auth()->user()->name }}</span>
+                                <span class="text-[11px] text-[var(--color-text-muted)]"> ({{ auth()->user()->section?->name ?? 'Pegawai Kantor' }})</span>
+                            </div>
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-800">
+                                Akun Login
+                            </span>
+                            <input type="hidden" name="borrower_id" value="{{ auth()->id() }}">
+                        </div>
+                    @endif
+
+                    <!-- Kegiatan Pelayanan (Wajib) -->
+                    <div>
+                        <label class="block text-xs font-semibold text-[var(--color-text-main)] mb-1">
+                            Kegiatan Pelayanan Pertanahan <span class="text-rose-500">*</span>
+                        </label>
+                        <select 
+                            name="service_activity_id" 
+                            x-model="bookingForm.service_activity_id"
+                            required 
+                            class="w-full px-3 py-2 text-xs rounded-lg border border-[var(--color-surface-border)] bg-[var(--color-surface-card)] text-[var(--color-text-main)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                        >
+                            <option value="">-- Pilih Kegiatan Pelayanan --</option>
+                            @foreach($serviceActivities as $act)
+                                <option value="{{ $act->id }}">{{ $act->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Keterangan / Keperluan Peminjaman (Opsional) -->
+                    <div>
+                        <label class="block text-xs font-semibold text-[var(--color-text-main)] mb-1">
+                            Keterangan / Keperluan Peminjaman (Opsional)
+                        </label>
+                        <textarea 
+                            name="notes" 
+                            x-model="bookingForm.notes"
+                            rows="2" 
+                            placeholder="Contoh: Pengecekan sertipikat warkah atau permohonan pemecahan hak..." 
+                            class="w-full px-3 py-2 text-xs rounded-lg border border-[var(--color-surface-border)] bg-[var(--color-surface-card)] text-[var(--color-text-main)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                        ></textarea>
+                    </div>
+
+                    <div class="flex justify-end gap-2 pt-2 border-t border-[var(--color-surface-border)]">
+                        <x-button type="button" variant="secondary" size="sm" @click="bookingModalOpen = false">
+                            Batal
+                        </x-button>
+                        <x-button type="submit" variant="primary" size="sm">
+                            Kirim Permohonan Booking
+                        </x-button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- MODAL RIWAYAT JEJAK AUDIT PER DOKUMEN -->
+        <!-- ========================================== -->
+        <div 
+            x-show="historyModalOpen" 
+            x-transition 
+            class="fixed inset-0 z-50 overflow-y-auto bg-black/60 flex items-center justify-center p-3 sm:p-5"
+            style="display: none;"
+        >
+            <div 
+                @click.outside="historyModalOpen = false"
+                class="w-full max-w-4xl max-h-[90vh] flex flex-col bg-[var(--color-surface-card)] rounded-2xl border border-[var(--color-surface-border)] shadow-2xl overflow-hidden"
+            >
+                <div class="flex items-center justify-between px-5 py-4 border-b border-[var(--color-surface-border)] bg-[var(--color-surface)]/50">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold text-[var(--color-primary)]">
+                                Riwayat Jejak Audit Peminjaman: <span x-text="historyDoc ? historyDoc.document_number : ''"></span>
+                            </h3>
+                            <p class="text-[11px] text-[var(--color-text-muted)]">Catatan kronologis seluruh permohonan, penyerahan, dan pengembalian warkah</p>
+                        </div>
+                    </div>
+                    <button type="button" @click="historyModalOpen = false" class="text-slate-400 hover:text-slate-600 text-lg px-1">&times;</button>
+                </div>
+
+                <div class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
+                    <!-- Loading state -->
+                    <div x-show="historyLoading" class="py-12 text-center text-xs text-slate-500">
+                        <svg class="animate-spin h-6 w-6 mx-auto mb-2 text-[var(--color-primary)]" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                        </svg>
+                        Memuat riwayat peminjaman berkas...
+                    </div>
+
+                    <!-- Empty state -->
+                    <div x-show="!historyLoading && historyList.length === 0" class="py-12 text-center text-xs text-slate-500">
+                        <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-2">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        Belum ada riwayat transaksi peminjaman untuk berkas arsip ini.
+                    </div>
+
+                    <!-- Table of loans -->
+                    <div x-show="!historyLoading && historyList.length > 0" class="overflow-x-auto border border-[var(--color-surface-border)] rounded-xl">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-[var(--color-surface)] text-[var(--color-text-muted)] font-semibold border-b border-[var(--color-surface-border)] uppercase text-[10px]">
+                                <tr>
+                                    <th class="px-3 py-2.5">Peminjam & Seksi</th>
+                                    <th class="px-3 py-2.5">Kegiatan Pelayanan</th>
+                                    <th class="px-3 py-2.5">Tgl Pinjam</th>
+                                    <th class="px-3 py-2.5">Tgl Kembali</th>
+                                    <th class="px-3 py-2.5 text-center">Status</th>
+                                    <th class="px-3 py-2.5">Disetujui Oleh</th>
+                                    <th class="px-3 py-2.5">Diterima Oleh</th>
+                                    <th class="px-3 py-2.5">Keterangan</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-[var(--color-surface-border)]">
+                                <template x-for="item in historyList" :key="item.id">
+                                    <tr class="hover:bg-[var(--color-surface)]/40 transition">
+                                        <td class="px-3 py-2.5 font-medium text-[var(--color-text-main)]">
+                                            <div x-text="item.borrower.name"></div>
+                                            <div class="text-[10px] text-slate-500" x-text="item.borrower.section"></div>
+                                        </td>
+                                        <td class="px-3 py-2.5 text-[var(--color-text-main)]" x-text="item.service_activity"></td>
+                                        <td class="px-3 py-2.5 font-mono text-slate-600" x-text="item.loan_date"></td>
+                                        <td class="px-3 py-2.5 font-mono text-slate-600" x-text="item.return_date"></td>
+                                        <td class="px-3 py-2.5 text-center">
+                                            <span 
+                                                class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold border"
+                                                :class="item.status_badge"
+                                                x-text="item.status_label"
+                                            ></span>
+                                        </td>
+                                        <td class="px-3 py-2.5 text-slate-600 text-[11px]" x-text="item.approver"></td>
+                                        <td class="px-3 py-2.5 text-slate-600 text-[11px]" x-text="item.receiver"></td>
+                                        <td class="px-3 py-2.5 text-slate-500 text-[11px] italic" x-text="item.notes"></td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="flex justify-end p-3 border-t border-[var(--color-surface-border)] bg-[var(--color-surface)]/30">
+                    <x-button type="button" variant="secondary" size="sm" @click="historyModalOpen = false">
+                        Tutup
+                    </x-button>
+                </div>
             </div>
         </div>
     </div>

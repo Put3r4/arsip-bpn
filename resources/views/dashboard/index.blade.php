@@ -57,11 +57,11 @@
 
     <!-- 3 Fixed Span Stat Cards (col-span-12 sm:col-span-6 md:col-span-4) -->
     <x-stat-card 
-        title="Menunggu Persetujuan" 
+        title="{{ auth()->user()->isStaff() ? 'Menunggu Persetujuan' : 'Booking Menunggu' }}" 
         :value="$pendingCount ?? 0"
         variant="warning"
-        description="{{ auth()->user()->isStaff() ? 'Total seluruh booking pending' : 'Booking Anda yang menunggu persetujuan' }}"
-        href="/loans"
+        description="{{ auth()->user()->isStaff() ? 'Total seluruh booking warkah pending' : 'Booking Anda yang menunggu persetujuan' }}"
+        href="/loans?tab=active&status=pending"
     >
         <x-slot name="icon">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -74,8 +74,8 @@
         title="Sedang Dipinjam" 
         :value="$borrowedCount ?? 0"
         variant="danger"
-        description="{{ auth()->user()->isStaff() ? 'Total berkas fisik di luar rak' : 'Berkas yang saat ini Anda pinjam' }}"
-        href="/loans"
+        description="{{ auth()->user()->isStaff() ? 'Total berkas fisik warkah di luar rak' : 'Berkas warkah yang saat ini Anda bawa' }}"
+        href="/loans?tab=active&status=borrowed"
     >
         <x-slot name="icon">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\SectionUserController;
 use App\Http\Controllers\ArchiveDocumentController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DocumentLoanController;
 use App\Http\Controllers\DocumentTypeController;
 use App\Http\Controllers\LandRightTypeController;
 use App\Http\Controllers\ProfileController;
@@ -48,12 +49,27 @@ Route::middleware('auth')->group(function () {
     Route::get('/documents/{document}/file', [ArchiveDocumentController::class, 'file'])->name('documents.file');
     Route::get('/documents/{document}/preview', [ArchiveDocumentController::class, 'file'])->name('documents.preview');
 
+    // Peminjaman Berkas (Semua Peran Terotentikasi: Super Admin, Archivist, Employee)
+    Route::get('/loans', [DocumentLoanController::class, 'index'])->name('loans.index');
+    Route::get('/loans/data', [DocumentLoanController::class, 'data'])->name('loans.data');
+    Route::post('/loans', [DocumentLoanController::class, 'store'])->name('loans.store');
+    Route::post('/loans/{loan}/cancel', [DocumentLoanController::class, 'cancel'])->name('loans.cancel');
+    Route::delete('/loans/{loan}', [DocumentLoanController::class, 'cancel'])->name('loans.destroy');
+    Route::get('/loans/returned', [DocumentLoanController::class, 'returnedIndex'])->name('loans.returned');
+    Route::get('/my-loans', [DocumentLoanController::class, 'myLoans'])->name('loans.my-loans');
+
     // Endpoint API Wilayah & Seksi (Dropdown Berantai - A5 butir 12)
     Route::get('/api/districts/{district}/villages', [DistrictVillageController::class, 'villages'])->name('api.districts.villages');
     Route::get('/api/sections/{section}/users', [SectionUserController::class, 'users'])->name('api.sections.users');
 
     // Pengelolaan Arsip & Master Data (Staf Arsip: Super Admin dan Archivist)
     Route::middleware('can:manage-archives')->group(function () {
+        // Peminjaman Khusus Staf Arsip (Approve, Pengembalian, Riwayat Jejak Audit)
+        Route::post('/loans/{loan}/approve', [DocumentLoanController::class, 'approve'])->name('loans.approve');
+        Route::post('/loans/{loan}/return', [DocumentLoanController::class, 'returnLoan'])->name('loans.return');
+        Route::get('/documents/{document}/history', [DocumentLoanController::class, 'history'])->name('documents.history');
+        Route::get('/audit', [DocumentLoanController::class, 'returnedIndex'])->name('audit.index');
+
         // Berkas Arsip Mutasi
         Route::post('/documents', [ArchiveDocumentController::class, 'store'])->name('documents.store');
         Route::match(['put', 'patch'], '/documents/{document}', [ArchiveDocumentController::class, 'update'])->name('documents.update');
