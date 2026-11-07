@@ -9,13 +9,13 @@
 
     <script>
         window.APP_USER_AUTHENTICATED = {{ auth()->check() ? 'true' : 'false' }};
-        // Apply saved theme immediately before render
-        (function() {
-            var saved = localStorage.getItem('theme');
-            if (saved && ['samudra', 'marun', 'senja'].includes(saved)) {
-                document.documentElement.setAttribute('data-theme', saved);
-            }
-        })();
+        // Server theme is the single source of truth for authenticated users;
+        // overwrite any conflicting localStorage value immediately so guest/stale theme does not persist.
+        @auth
+            try {
+                localStorage.setItem('theme', '{{ auth()->user()->theme ?? 'samudra' }}');
+            } catch (e) {}
+        @endauth
     </script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])

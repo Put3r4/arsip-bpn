@@ -106,6 +106,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Helper apakah pengguna adalah staf arsip (super_admin atau archivist).
+     */
+    public function isStaff(): bool
+    {
+        return $this->canManageArchives();
+    }
+
+    /**
      * Super admin is a superset of archivist.
      */
     public function canManageArchives(): bool

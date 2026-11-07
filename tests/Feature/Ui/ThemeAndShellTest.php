@@ -17,9 +17,17 @@ class ThemeAndShellTest extends TestCase
         $response->assertRedirect('/dashboard');
     }
 
-    public function test_dashboard_renders_with_shell_and_tokens(): void
+    public function test_guest_is_redirected_to_login_from_dashboard(): void
     {
         $response = $this->get('/dashboard');
+        $response->assertRedirect('/login');
+    }
+
+    public function test_dashboard_renders_with_shell_and_tokens(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get('/dashboard');
 
         $response->assertStatus(200);
         $response->assertSee('ARSIP BPN');
@@ -28,6 +36,16 @@ class ThemeAndShellTest extends TestCase
         $response->assertSee('Tema Samudra');
         $response->assertSee('Tema Marun');
         $response->assertSee('Tema Senja');
+    }
+
+    public function test_dashboard_for_user_with_marun_theme_renders_data_theme_marun_from_server(): void
+    {
+        $user = User::factory()->create(['theme' => 'marun']);
+
+        $response = $this->actingAs($user)->get('/dashboard');
+
+        $response->assertStatus(200);
+        $response->assertSee('data-theme="marun"', false);
     }
 
     public function test_login_page_renders_successfully(): void

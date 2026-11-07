@@ -8,11 +8,15 @@
     <title>{{ isset($title) ? $title . ' - ' : '' }}{{ config('app.name', 'Sistem Informasi Arsip BPN Sumbawa') }}</title>
 
     <script>
+        window.APP_USER_AUTHENTICATED = false;
+        // For guest pages (such as login), load preview theme from localStorage
         (function() {
-            var saved = localStorage.getItem('theme');
-            if (saved && ['samudra', 'marun', 'senja'].includes(saved)) {
-                document.documentElement.setAttribute('data-theme', saved);
-            }
+            try {
+                var saved = localStorage.getItem('theme');
+                if (saved && ['samudra', 'marun', 'senja'].includes(saved)) {
+                    document.documentElement.setAttribute('data-theme', saved);
+                }
+            } catch (e) {}
         })();
     </script>
 

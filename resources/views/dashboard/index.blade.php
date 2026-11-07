@@ -1,27 +1,66 @@
 <x-app-layout title="Dashboard">
     <x-slot name="header">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
-                <h1 class="text-xl font-bold tracking-tight text-[var(--color-primary)]">
-                    Dashboard Ringkasan
-                </h1>
+                <div class="flex items-center gap-2">
+                    <h1 class="text-xl font-bold tracking-tight text-[var(--color-primary)]">
+                        Dashboard Ringkasan
+                    </h1>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[var(--color-accent)] text-[var(--color-accent-contrast)]">
+                        {{ auth()->user()->role?->label() }}
+                    </span>
+                </div>
                 <p class="text-xs text-[var(--color-text-muted)] mt-0.5">
-                    Selamat datang di Sistem Informasi Arsip Kantah ATR/BPN Kabupaten Sumbawa
+                    Selamat datang kembali, <span class="font-semibold text-[var(--color-text-main)]">{{ auth()->user()->name }}</span>
+                    @if(auth()->user()->section)
+                        &bull; {{ auth()->user()->section->name }}
+                    @endif
                 </p>
             </div>
             <div class="flex items-center gap-2">
-                <span class="text-xs text-[var(--color-text-muted)] font-medium">Tema Aktif:</span>
-                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold uppercase bg-[var(--color-accent)] text-[var(--color-accent-contrast)]" x-text="$store.theme.current"></span>
+                <span class="text-xs text-[var(--color-text-muted)] font-medium">Tema Tampilan:</span>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase border border-[var(--color-surface-border)] bg-[var(--color-surface)] text-[var(--color-primary)]" x-text="$store.theme.current"></span>
             </div>
         </div>
     </x-slot>
+
+    <!-- Role-based Welcome Banner -->
+    <div class="col-span-12">
+        <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[var(--color-sidebar)] to-[var(--color-primary)] text-white shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="space-y-1">
+                <h2 class="text-base font-bold">
+                    @if(auth()->user()->isSuperAdmin())
+                        Panel Administrator Sistem
+                    @elseif(auth()->user()->isArchivist())
+                        Panel Petugas Pengelola Arsip
+                    @else
+                        Layanan Peminjaman Berkas Pegawai
+                    @endif
+                </h2>
+                <p class="text-xs text-white/80 max-w-2xl leading-relaxed">
+                    @if(auth()->user()->isSuperAdmin())
+                        Anda memiliki kendali administratif penuh: mengelola data seksi, pengguna, master klasifikasi arsip, serta menyetujui dan memantau seluruh siklus peminjaman warkah pertanahan.
+                    @elseif(auth()->user()->isArchivist())
+                        Kelola katalog berkas, tata letak rak penyimpanan fisik warkah, persetujuan peminjaman, dan verifikasi berkas kembali ke arsip.
+                    @else
+                        Jelajahi dokumen Buku Tanah, Surat Ukur, dan Warkah. Anda dapat memantau ketersediaan fisik berkas dan mengajukan booking permohonan peminjaman.
+                    @endif
+                </p>
+            </div>
+            <div class="shrink-0 flex items-center gap-2">
+                <a href="/profile" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold backdrop-blur-xs transition">
+                    Pengaturan Akun
+                </a>
+            </div>
+        </div>
+    </div>
 
     <!-- 3 Fixed Span Stat Cards (col-span-12 sm:col-span-6 md:col-span-4) -->
     <x-stat-card 
         title="Menunggu Persetujuan" 
         :value="$pendingCount ?? 0"
         variant="warning"
-        description="Permohonan booking berkas warkah"
+        description="{{ auth()->user()->isStaff() ? 'Total seluruh booking pending' : 'Booking Anda yang menunggu persetujuan' }}"
         href="/loans"
     >
         <x-slot name="icon">
@@ -35,7 +74,7 @@
         title="Sedang Dipinjam" 
         :value="$borrowedCount ?? 0"
         variant="danger"
-        description="Berkas fisik di luar rak penyimpanan"
+        description="{{ auth()->user()->isStaff() ? 'Total berkas fisik di luar rak' : 'Berkas yang saat ini Anda pinjam' }}"
         href="/loans"
     >
         <x-slot name="icon">
@@ -139,7 +178,7 @@
 
     <!-- Data Master Count Summary Card (col-span-12) -->
     <div class="col-span-12">
-        <x-card title="Status Data Master Kantor Pertanahan Sumbawa (Hasil Seeder)" subtitle="Master klasifikasi dan wilayah se-Kabupaten Sumbawa">
+        <x-card title="Status Data Master Kantor Pertanahan Sumbawa" subtitle="Master klasifikasi dan wilayah se-Kabupaten Sumbawa">
             <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3 text-center">
                 <div class="p-3 rounded-lg bg-[var(--color-surface)] border border-[var(--color-surface-border)]">
                     <p class="text-xs text-[var(--color-text-muted)] font-semibold">Kecamatan</p>

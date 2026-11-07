@@ -131,6 +131,12 @@
                         <p class="text-xs font-semibold text-[var(--color-text-main)]">{{ auth()->user()->name }}</p>
                         <p class="text-[11px] text-[var(--color-text-muted)] truncate">{{ auth()->user()->username }}</p>
                     </div>
+                    <a href="/profile" class="w-full text-left px-4 py-2 text-xs text-[var(--color-text-main)] hover:bg-[var(--color-surface)] flex items-center gap-2">
+                        <svg class="w-4 h-4 text-[var(--color-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                        <span>Pengaturan Profil</span>
+                    </a>
                     <form method="POST" action="/logout">
                         @csrf
                         <button type="submit" class="w-full text-left px-4 py-2 text-xs text-[var(--color-danger)] hover:bg-[var(--color-surface)] flex items-center gap-2">

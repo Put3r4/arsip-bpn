@@ -2,7 +2,7 @@
     x-data="{
         notices: [],
         add(notice) {
-            notice.id = Date.now();
+            notice.id = Date.now() + Math.random();
             this.notices.push(notice);
             setTimeout(() => {
                 this.remove(notice.id);
@@ -12,6 +12,7 @@
             this.notices = this.notices.filter(n => n.id !== id);
         }
     }"
+    @toast-notify.window="add($event.detail)"
     x-init="
         @if(session('success'))
             add({ type: 'success', text: '{{ addslashes(session('success')) }}' });

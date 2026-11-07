@@ -1,37 +1,55 @@
 <?php
 
-use App\Models\ArchiveDocument;
-use App\Models\DocumentLoan;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SectionController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes - Sistem Informasi Arsip Kantah BPN Sumbawa
+|--------------------------------------------------------------------------
+*/
+
+// Public / Root
 Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
-Route::get('/dashboard', function () {
-    $pendingCount = DocumentLoan::pending()->count();
-    $borrowedCount = DocumentLoan::borrowed()->count();
-    $totalDocuments = ArchiveDocument::count();
+// Guest Routes
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'login']);
+});
 
-    return view('dashboard.index', compact('pendingCount', 'borrowedCount', 'totalDocuments'));
-})->name('dashboard');
+// Authenticated Routes
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
-Route::patch('/profile/theme', function (Request $request) {
-    $validated = $request->validate([
-        'theme' => 'required|string|in:samudra,marun,senja',
-    ]);
+    // Profile Management
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+    Route::patch('/profile/theme', [ProfileController::class, 'updateTheme'])->name('profile.theme');
 
-    if (auth()->check()) {
-        auth()->user()->update(['theme' => $validated['theme']]);
-    }
+    // Administration (Super Admin Only)
+    Route::middleware('can:super-admin')->group(function () {
+        // Seksi Organisasi
+        Route::get('/master/sections', [SectionController::class, 'index'])->name('master.sections.index');
+        Route::get('/master/sections/data', [SectionController::class, 'data'])->name('master.sections.data');
+        Route::post('/master/sections', [SectionController::class, 'store'])->name('master.sections.store');
+        Route::match(['put', 'patch'], '/master/sections/{section}', [SectionController::class, 'update'])->name('master.sections.update');
+        Route::delete('/master/sections/{section}', [SectionController::class, 'destroy'])->name('master.sections.destroy');
 
-    return response()->json([
-        'status' => 'success',
-        'theme' => $validated['theme'],
-    ]);
-})->name('profile.theme');
+        // Manajemen Pengguna
+        Route::get('/users', [UserController::class, 'index'])->name('users.index');
+        Route::get('/users/data', [UserController::class, 'data'])->name('users.data');
+        Route::post('/users', [UserController::class, 'store'])->name('users.store');
+        Route::match(['put', 'patch'], '/users/{user}', [UserController::class, 'update'])->name('users.update');
+        Route::post('/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
+        Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    });
+});
