@@ -1,0 +1,832 @@
+[
+    {
+        "id": "5204020001",
+        "district_id": "5204020",
+        "name": "Pada Suka"
+    },
+    {
+        "id": "5204020002",
+        "district_id": "5204020",
+        "name": "Suka Maju"
+    },
+    {
+        "id": "5204020003",
+        "district_id": "5204020",
+        "name": "Lunyuk Ode"
+    },
+    {
+        "id": "5204020004",
+        "district_id": "5204020",
+        "name": "Lunyuk Rea"
+    },
+    {
+        "id": "5204020005",
+        "district_id": "5204020",
+        "name": "Jamu"
+    },
+    {
+        "id": "5204020009",
+        "district_id": "5204020",
+        "name": "Emang Lestari"
+    },
+    {
+        "id": "5204020010",
+        "district_id": "5204020",
+        "name": "Perung"
+    },
+    {
+        "id": "5204021001",
+        "district_id": "5204021",
+        "name": "Mungkin"
+    },
+    {
+        "id": "5204021002",
+        "district_id": "5204021",
+        "name": "Kelawis"
+    },
+    {
+        "id": "5204021003",
+        "district_id": "5204021",
+        "name": "Sebeok"
+    },
+    {
+        "id": "5204021004",
+        "district_id": "5204021",
+        "name": "Senawang"
+    },
+    {
+        "id": "5204050006",
+        "district_id": "5204050",
+        "name": "Luar"
+    },
+    {
+        "id": "5204050007",
+        "district_id": "5204050",
+        "name": "Baru"
+    },
+    {
+        "id": "5204050008",
+        "district_id": "5204050",
+        "name": "Kalimango"
+    },
+    {
+        "id": "5204050009",
+        "district_id": "5204050",
+        "name": "Juranalas"
+    },
+    {
+        "id": "5204050010",
+        "district_id": "5204050",
+        "name": "Dalam"
+    },
+    {
+        "id": "5204050011",
+        "district_id": "5204050",
+        "name": "Pulau Bungin"
+    },
+    {
+        "id": "5204050013",
+        "district_id": "5204050",
+        "name": "Marenteh"
+    },
+    {
+        "id": "5204050019",
+        "district_id": "5204050",
+        "name": "Labuhan Alas"
+    },
+    {
+        "id": "5204051001",
+        "district_id": "5204051",
+        "name": "Mapin Rea"
+    },
+    {
+        "id": "5204051002",
+        "district_id": "5204051",
+        "name": "Mapin Kebak"
+    },
+    {
+        "id": "5204051003",
+        "district_id": "5204051",
+        "name": "Labuan Mapin"
+    },
+    {
+        "id": "5204051004",
+        "district_id": "5204051",
+        "name": "Lekong"
+    },
+    {
+        "id": "5204051005",
+        "district_id": "5204051",
+        "name": "Gontar"
+    },
+    {
+        "id": "5204051006",
+        "district_id": "5204051",
+        "name": "Usar Mapin"
+    },
+    {
+        "id": "5204051007",
+        "district_id": "5204051",
+        "name": "Gontar Baru"
+    },
+    {
+        "id": "5204051008",
+        "district_id": "5204051",
+        "name": "Mapin Beru"
+    },
+    {
+        "id": "5204052001",
+        "district_id": "5204052",
+        "name": "Pulau Kaung"
+    },
+    {
+        "id": "5204052002",
+        "district_id": "5204052",
+        "name": "Tarusa"
+    },
+    {
+        "id": "5204052003",
+        "district_id": "5204052",
+        "name": "Juru Mapin"
+    },
+    {
+        "id": "5204052004",
+        "district_id": "5204052",
+        "name": "Kalabeso"
+    },
+    {
+        "id": "5204052005",
+        "district_id": "5204052",
+        "name": "Labuhan Burung"
+    },
+    {
+        "id": "5204052006",
+        "district_id": "5204052",
+        "name": "Buin Baru"
+    },
+    {
+        "id": "5204061001",
+        "district_id": "5204061",
+        "name": "Stowe Brang"
+    },
+    {
+        "id": "5204061002",
+        "district_id": "5204061",
+        "name": "Tengah"
+    },
+    {
+        "id": "5204061003",
+        "district_id": "5204061",
+        "name": "Sabedo"
+    },
+    {
+        "id": "5204061004",
+        "district_id": "5204061",
+        "name": "Motong"
+    },
+    {
+        "id": "5204061005",
+        "district_id": "5204061",
+        "name": "Orong Bawa"
+    },
+    {
+        "id": "5204061006",
+        "district_id": "5204061",
+        "name": "Labuan Bajo"
+    },
+    {
+        "id": "5204061007",
+        "district_id": "5204061",
+        "name": "Pukat"
+    },
+    {
+        "id": "5204061008",
+        "district_id": "5204061",
+        "name": "Jorok"
+    },
+    {
+        "id": "5204061009",
+        "district_id": "5204061",
+        "name": "Bale Brang"
+    },
+    {
+        "id": "5204062001",
+        "district_id": "5204062",
+        "name": "Sampe"
+    },
+    {
+        "id": "5204062002",
+        "district_id": "5204062",
+        "name": "Luk"
+    },
+    {
+        "id": "5204062003",
+        "district_id": "5204062",
+        "name": "Rhee"
+    },
+    {
+        "id": "5204062004",
+        "district_id": "5204062",
+        "name": "Rhee Loka"
+    },
+    {
+        "id": "5204070001",
+        "district_id": "5204070",
+        "name": "Baturotok"
+    },
+    {
+        "id": "5204070002",
+        "district_id": "5204070",
+        "name": "Tangkan Pulit"
+    },
+    {
+        "id": "5204070003",
+        "district_id": "5204070",
+        "name": "Bao Desa"
+    },
+    {
+        "id": "5204070004",
+        "district_id": "5204070",
+        "name": "Tepal"
+    },
+    {
+        "id": "5204070005",
+        "district_id": "5204070",
+        "name": "Batudulang"
+    },
+    {
+        "id": "5204070006",
+        "district_id": "5204070",
+        "name": "Kelungkung"
+    },
+    {
+        "id": "5204080004",
+        "district_id": "5204080",
+        "name": "Lempeh"
+    },
+    {
+        "id": "5204080010",
+        "district_id": "5204080",
+        "name": "Samapuin"
+    },
+    {
+        "id": "5204080011",
+        "district_id": "5204080",
+        "name": "Brang Bara"
+    },
+    {
+        "id": "5204080012",
+        "district_id": "5204080",
+        "name": "Pekat"
+    },
+    {
+        "id": "5204080013",
+        "district_id": "5204080",
+        "name": "Seketeng"
+    },
+    {
+        "id": "5204080014",
+        "district_id": "5204080",
+        "name": "Bugis"
+    },
+    {
+        "id": "5204080015",
+        "district_id": "5204080",
+        "name": "Uma Sima"
+    },
+    {
+        "id": "5204080016",
+        "district_id": "5204080",
+        "name": "Brang Biji"
+    },
+    {
+        "id": "5204081001",
+        "district_id": "5204081",
+        "name": "Labuhan Badas"
+    },
+    {
+        "id": "5204081002",
+        "district_id": "5204081",
+        "name": "Karang Dima"
+    },
+    {
+        "id": "5204081003",
+        "district_id": "5204081",
+        "name": "Labuan Sumbawa"
+    },
+    {
+        "id": "5204081004",
+        "district_id": "5204081",
+        "name": "Labuan Aji"
+    },
+    {
+        "id": "5204081005",
+        "district_id": "5204081",
+        "name": "Sebotok"
+    },
+    {
+        "id": "5204081006",
+        "district_id": "5204081",
+        "name": "Bajo Medang"
+    },
+    {
+        "id": "5204081007",
+        "district_id": "5204081",
+        "name": "Bugis Medang"
+    },
+    {
+        "id": "5204082001",
+        "district_id": "5204082",
+        "name": "Pelat"
+    },
+    {
+        "id": "5204082002",
+        "district_id": "5204082",
+        "name": "Kerekeh"
+    },
+    {
+        "id": "5204082003",
+        "district_id": "5204082",
+        "name": "Boak"
+    },
+    {
+        "id": "5204082004",
+        "district_id": "5204082",
+        "name": "Pungka"
+    },
+    {
+        "id": "5204082005",
+        "district_id": "5204082",
+        "name": "Jorok"
+    },
+    {
+        "id": "5204082006",
+        "district_id": "5204082",
+        "name": "Kerato"
+    },
+    {
+        "id": "5204082007",
+        "district_id": "5204082",
+        "name": "Uma Beringin"
+    },
+    {
+        "id": "5204082008",
+        "district_id": "5204082",
+        "name": "Nijang"
+    },
+    {
+        "id": "5204090001",
+        "district_id": "5204090",
+        "name": "Serading"
+    },
+    {
+        "id": "5204090002",
+        "district_id": "5204090",
+        "name": "Kakiang"
+    },
+    {
+        "id": "5204090003",
+        "district_id": "5204090",
+        "name": "Moyo"
+    },
+    {
+        "id": "5204090004",
+        "district_id": "5204090",
+        "name": "Poto"
+    },
+    {
+        "id": "5204090005",
+        "district_id": "5204090",
+        "name": "Berare"
+    },
+    {
+        "id": "5204090006",
+        "district_id": "5204090",
+        "name": "Ngeru"
+    },
+    {
+        "id": "5204090010",
+        "district_id": "5204090",
+        "name": "Olat Rawa"
+    },
+    {
+        "id": "5204090011",
+        "district_id": "5204090",
+        "name": "Batu Bangka"
+    },
+    {
+        "id": "5204090013",
+        "district_id": "5204090",
+        "name": "Moyo Mekar"
+    },
+    {
+        "id": "5204090014",
+        "district_id": "5204090",
+        "name": "Lab Ijuk"
+    },
+    {
+        "id": "5204091001",
+        "district_id": "5204091",
+        "name": "Sebewe"
+    },
+    {
+        "id": "5204091002",
+        "district_id": "5204091",
+        "name": "Pungkit"
+    },
+    {
+        "id": "5204091003",
+        "district_id": "5204091",
+        "name": "Kukin"
+    },
+    {
+        "id": "5204091004",
+        "district_id": "5204091",
+        "name": "Baru Tahan"
+    },
+    {
+        "id": "5204091005",
+        "district_id": "5204091",
+        "name": "Penyaring"
+    },
+    {
+        "id": "5204091006",
+        "district_id": "5204091",
+        "name": "Songkar"
+    },
+    {
+        "id": "5204100001",
+        "district_id": "5204100",
+        "name": "Sempe"
+    },
+    {
+        "id": "5204100002",
+        "district_id": "5204100",
+        "name": "Semamung"
+    },
+    {
+        "id": "5204100003",
+        "district_id": "5204100",
+        "name": "Sebasang"
+    },
+    {
+        "id": "5204100004",
+        "district_id": "5204100",
+        "name": "Batutering"
+    },
+    {
+        "id": "5204100005",
+        "district_id": "5204100",
+        "name": "Batubulan"
+    },
+    {
+        "id": "5204100006",
+        "district_id": "5204100",
+        "name": "Mokong"
+    },
+    {
+        "id": "5204100007",
+        "district_id": "5204100",
+        "name": "Pernek"
+    },
+    {
+        "id": "5204100008",
+        "district_id": "5204100",
+        "name": "Leseng"
+    },
+    {
+        "id": "5204100009",
+        "district_id": "5204100",
+        "name": "Lito"
+    },
+    {
+        "id": "5204100010",
+        "district_id": "5204100",
+        "name": "Marga Karya"
+    },
+    {
+        "id": "5204100011",
+        "district_id": "5204100",
+        "name": "Berang Rea"
+    },
+    {
+        "id": "5204100012",
+        "district_id": "5204100",
+        "name": "Maman"
+    },
+    {
+        "id": "5204110002",
+        "district_id": "5204110",
+        "name": "Lebangkar"
+    },
+    {
+        "id": "5204110003",
+        "district_id": "5204110",
+        "name": "Lebin"
+    },
+    {
+        "id": "5204110008",
+        "district_id": "5204110",
+        "name": "Lawin"
+    },
+    {
+        "id": "5204110010",
+        "district_id": "5204110",
+        "name": "Ropang"
+    },
+    {
+        "id": "5204110011",
+        "district_id": "5204110",
+        "name": "Ranan"
+    },
+    {
+        "id": "5204111001",
+        "district_id": "5204111",
+        "name": "Ledang"
+    },
+    {
+        "id": "5204111002",
+        "district_id": "5204111",
+        "name": "Tatebal"
+    },
+    {
+        "id": "5204111003",
+        "district_id": "5204111",
+        "name": "Lenangguar"
+    },
+    {
+        "id": "5204111004",
+        "district_id": "5204111",
+        "name": "Telaga"
+    },
+    {
+        "id": "5204112001",
+        "district_id": "5204112",
+        "name": "Sepukur"
+    },
+    {
+        "id": "5204112002",
+        "district_id": "5204112",
+        "name": "Ai Mual"
+    },
+    {
+        "id": "5204112003",
+        "district_id": "5204112",
+        "name": "Lantung"
+    },
+    {
+        "id": "5204112004",
+        "district_id": "5204112",
+        "name": "Padesa"
+    },
+    {
+        "id": "5204121001",
+        "district_id": "5204121",
+        "name": "Lape"
+    },
+    {
+        "id": "5204121002",
+        "district_id": "5204121",
+        "name": "Dete"
+    },
+    {
+        "id": "5204121003",
+        "district_id": "5204121",
+        "name": "Labuan Kuris"
+    },
+    {
+        "id": "5204121004",
+        "district_id": "5204121",
+        "name": "Hijrah"
+    },
+    {
+        "id": "5204122001",
+        "district_id": "5204122",
+        "name": "Pungkit"
+    },
+    {
+        "id": "5204122002",
+        "district_id": "5204122",
+        "name": "Lopok"
+    },
+    {
+        "id": "5204122003",
+        "district_id": "5204122",
+        "name": "Lopok Beru"
+    },
+    {
+        "id": "5204122004",
+        "district_id": "5204122",
+        "name": "Langam"
+    },
+    {
+        "id": "5204122005",
+        "district_id": "5204122",
+        "name": "Berora"
+    },
+    {
+        "id": "5204122006",
+        "district_id": "5204122",
+        "name": "Mama"
+    },
+    {
+        "id": "5204122007",
+        "district_id": "5204122",
+        "name": "Tatede"
+    },
+    {
+        "id": "5204130006",
+        "district_id": "5204130",
+        "name": "Sepakat"
+    },
+    {
+        "id": "5204130007",
+        "district_id": "5204130",
+        "name": "Sp I Prode"
+    },
+    {
+        "id": "5204130008",
+        "district_id": "5204130",
+        "name": "Sp Ii Prode"
+    },
+    {
+        "id": "5204130009",
+        "district_id": "5204130",
+        "name": "Plampang"
+    },
+    {
+        "id": "5204130010",
+        "district_id": "5204130",
+        "name": "Sepayung"
+    },
+    {
+        "id": "5204130011",
+        "district_id": "5204130",
+        "name": "Teluk Santong"
+    },
+    {
+        "id": "5204130012",
+        "district_id": "5204130",
+        "name": "Muer"
+    },
+    {
+        "id": "5204130015",
+        "district_id": "5204130",
+        "name": "Sp Iii Prode"
+    },
+    {
+        "id": "5204130017",
+        "district_id": "5204130",
+        "name": "Brang Kolong"
+    },
+    {
+        "id": "5204130018",
+        "district_id": "5204130",
+        "name": "Selante"
+    },
+    {
+        "id": "5204130019",
+        "district_id": "5204130",
+        "name": "Usar"
+    },
+    {
+        "id": "5204130020",
+        "district_id": "5204130",
+        "name": "Sp Iv Buin Batu"
+    },
+    {
+        "id": "5204131001",
+        "district_id": "5204131",
+        "name": "Jaya Makmur"
+    },
+    {
+        "id": "5204131002",
+        "district_id": "5204131",
+        "name": "Sekokat"
+    },
+    {
+        "id": "5204131003",
+        "district_id": "5204131",
+        "name": "Suka Damai"
+    },
+    {
+        "id": "5204131004",
+        "district_id": "5204131",
+        "name": "Labangka"
+    },
+    {
+        "id": "5204131005",
+        "district_id": "5204131",
+        "name": "Suka Mulya"
+    },
+    {
+        "id": "5204132001",
+        "district_id": "5204132",
+        "name": "Maronge"
+    },
+    {
+        "id": "5204132002",
+        "district_id": "5204132",
+        "name": "Labuhan Sangoro"
+    },
+    {
+        "id": "5204132003",
+        "district_id": "5204132",
+        "name": "Simu"
+    },
+    {
+        "id": "5204132004",
+        "district_id": "5204132",
+        "name": "Pemasar"
+    },
+    {
+        "id": "5204140001",
+        "district_id": "5204140",
+        "name": "Boal"
+    },
+    {
+        "id": "5204140002",
+        "district_id": "5204140",
+        "name": "Empang Atas"
+    },
+    {
+        "id": "5204140003",
+        "district_id": "5204140",
+        "name": "Jotang"
+    },
+    {
+        "id": "5204140005",
+        "district_id": "5204140",
+        "name": "Ongko"
+    },
+    {
+        "id": "5204140007",
+        "district_id": "5204140",
+        "name": "Empang Bawah"
+    },
+    {
+        "id": "5204140011",
+        "district_id": "5204140",
+        "name": "Lamenta"
+    },
+    {
+        "id": "5204140013",
+        "district_id": "5204140",
+        "name": "Gapit"
+    },
+    {
+        "id": "5204140014",
+        "district_id": "5204140",
+        "name": "Pamanto"
+    },
+    {
+        "id": "5204140015",
+        "district_id": "5204140",
+        "name": "Jotang Beru"
+    },
+    {
+        "id": "5204140016",
+        "district_id": "5204140",
+        "name": "Bunga Eja"
+    },
+    {
+        "id": "5204141001",
+        "district_id": "5204141",
+        "name": "Labuan Bontong"
+    },
+    {
+        "id": "5204141002",
+        "district_id": "5204141",
+        "name": "Labuan Aji"
+    },
+    {
+        "id": "5204141003",
+        "district_id": "5204141",
+        "name": "Bantulanteh"
+    },
+    {
+        "id": "5204141004",
+        "district_id": "5204141",
+        "name": "Labuan Jambu"
+    },
+    {
+        "id": "5204141005",
+        "district_id": "5204141",
+        "name": "Tolo' Oi"
+    },
+    {
+        "id": "5204141006",
+        "district_id": "5204141",
+        "name": "Mata"
+    },
+    {
+        "id": "5204141007",
+        "district_id": "5204141",
+        "name": "Banda"
+    },
+    {
+        "id": "5204141008",
+        "district_id": "5204141",
+        "name": "Pidang"
+    }
+]

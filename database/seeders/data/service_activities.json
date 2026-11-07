@@ -1,0 +1,50 @@
+[
+    {
+        "id": 1,
+        "name": "Roya"
+    },
+    {
+        "id": 2,
+        "name": "Jual Beli"
+    },
+    {
+        "id": 4,
+        "name": "Pewarisan"
+    },
+    {
+        "id": 5,
+        "name": "Hibah"
+    },
+    {
+        "id": 6,
+        "name": "Pemecahan"
+    },
+    {
+        "id": 8,
+        "name": "SKPT"
+    },
+    {
+        "id": 9,
+        "name": "Sertipikat Hilang"
+    },
+    {
+        "id": 10,
+        "name": "Ganti Blangko Karena Rusak"
+    },
+    {
+        "id": 11,
+        "name": "Pengecekan Sertipikat"
+    },
+    {
+        "id": 12,
+        "name": "Ganti Blanko Karena Lama"
+    },
+    {
+        "id": 13,
+        "name": "Pendaftaran SK"
+    },
+    {
+        "id": 14,
+        "name": "Hapus Hak"
+    }
+]
