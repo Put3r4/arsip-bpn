@@ -120,6 +120,10 @@ class ArchiveDocument extends Model
 
     public function hasActiveLoan(): bool
     {
+        if ($this->relationLoaded('activeLoan')) {
+            return $this->activeLoan !== null;
+        }
+
         return $this->loans()
             ->whereIn('status', [LoanStatus::PENDING, LoanStatus::BORROWED])
             ->exists();
